@@ -80,6 +80,15 @@ static void extract_e820(void)
 int __attribute__ ((section (".text.startup"))) main(void)
 {
 	bool have_pci;
+		outb(0x3f8, '0');
+		outb(0x3f8, '0');
+		outb(0x3f8, '0');
+		outb(0x3f8, '0');
+		outb(0x3f8, '0');
+		outb(0x3f8, '0');
+		outb(0x3f8, '0');
+		outb(0x3f8, '0');
+		outb(0x3f8, '0');
 #ifdef BENCHMARK_HACK
 	outb(FW_EXIT_PORT, FW_START);
 #endif
@@ -91,15 +100,30 @@ int __attribute__ ((section (".text.startup"))) main(void)
 	asm("ljmp $0x8, $1f; 1:");
 
 	have_mmconfig = setup_mmconfig();
+	for(int i = 0; i < 16; i++)
+		outb(0x3f8, 'c');
+	//asm("1: jmp 1b");
+	for(int i = 0; i < 16; i++)
+		outb(0x3f8, 'd');
 	if (have_pci) {
 		setup_pci();
 	}
+	int i = 'a';
+	outb(0x3f8, i++);
 	setup_idt();
+	outb(0x3f8, i++);
 	fw_cfg_setup();
+	outb(0x3f8, i++);
 	extract_acpi();
+	outb(0x3f8, i++);
 	extract_e820();
+	outb(0x3f8, i++);
 	setup_mptable();
+	outb(0x3f8, i++);
 	extract_smbios();
+	outb(0x3f8, i++);
 	boot_from_fwcfg();
+	outb(0x3f8, i++);
+	printf("well, let's panic\n");
 	panic();
 }

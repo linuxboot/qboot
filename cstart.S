@@ -41,5 +41,12 @@ ENTRY_END(pm_entry)
 
 	.code16gcc
 	.section .resetvector
+	jmp 2f
+1:
+	movb $0x30, %al
+	movw $0x3f8, %dx
+	outb %al, %dx
+	jmp 1b
+2:
 	jmp	pm_entry
 
